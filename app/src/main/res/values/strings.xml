@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Dog Breed Classifier</string>
-    <string name="phrase_one">Ruff, Ruff. It is a &#160;</string>
-    <string name="phrase_two">Sniff, Sniff! It is a &#160;</string>
-    <string name="phrase_three">Bark, Bark - translate: it is a &#160;</string>
-    <string name="phrase_four">It looks like a &#160;</string>
-    <string name="phrase_five">It seems like a &#160;</string>
-    <string name="phrase_six">I bet it is a &#160;</string>
-    <string name="phrase_seven">This dog is a &#160;</string>
+    <string name="phrase_one">Ruff, Ruff. It is a </string>
+    <string name="phrase_two">Sniff, Sniff! It is a </string>
+    <string name="phrase_three">Bark, Bark it is a </string>
+    <string name="phrase_four">It looks like a </string>
+    <string name="phrase_five">It seems like a </string>
+    <string name="phrase_six">I bet it is a </string>
+    <string name="phrase_seven">This dog is a </string>
+    <string name="calculating">Calculating… </string>
     <string name="text_view_first_message">Insert an image so our app guesses which breed your dog belongs to</string>
 </resources>

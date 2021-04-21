@@ -6,11 +6,12 @@ import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.thfmart.dogbreedclassifier.R.*
+import com.github.thfmart.dogbreedclassifier.R.string.*
 import com.github.thfmart.dogbreedclassifier.classifier.Classifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class MainViewModel(private val assets: AssetManager, private val applicationContext:Context) : ViewModel() {
 
@@ -25,18 +26,26 @@ class MainViewModel(private val assets: AssetManager, private val applicationCon
         classifier = Classifier(assets, applicationContext)
     }
 
-    fun getRandomMessage(): String {
+    fun getRandomMessage(): Int {
         val phrases = arrayOf(
-            string.phrase_one, string.phrase_two, string.phrase_three, string.phrase_four,
-            string.phrase_five, string.phrase_six, string.phrase_seven
+            phrase_one, phrase_two, phrase_three, phrase_four,
+            phrase_five, phrase_six, phrase_seven
         )
-        return "$phrases[randomIndex]"
+        val randomIndex = Random.nextInt(0,7)
+        return phrases[randomIndex]
+    }
+
+    fun calculatingMessage(): Int {
+        return calculating
     }
 
     fun predictBreed(bitmap: Bitmap) {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                predictionResult.value = classifier.recognizeImage(bitmap)
+                val result = classifier.recognizeImage(bitmap)
+                withContext(Dispatchers.Main){
+                    predictionResult.value = result
+                }
             }
         }
     }

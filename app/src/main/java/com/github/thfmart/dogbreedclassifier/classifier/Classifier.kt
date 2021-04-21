@@ -1,6 +1,5 @@
 package com.github.thfmart.dogbreedclassifier.classifier
 
-
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
@@ -10,22 +9,16 @@ import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.model.Model
 import org.tensorflow.lite.support.model.Model.Options.Builder
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.nio.MappedByteBuffer
-import java.nio.channels.FileChannel
-import org.tensorflow.lite.Interpreter as Interpreter
 
-
-class Classifier(private val assets: AssetManager, private val applicationContext: Context) {
+class Classifier(assets: AssetManager, applicationContext: Context) {
     private val inputSize = 299
-    private val modelPath = "converted_model.tflite"
     private val labelPath = "labels.txt"
     private val imageMean = 0
     private val imageStd = 255.0f
     private val imageChannels = 3
-    private val model = ConvertedModel.newInstance(applicationContext)
+    private val model: ConvertedModel
     private var labelList: List<String>
 
     init {
@@ -39,20 +32,12 @@ class Classifier(private val assets: AssetManager, private val applicationContex
         }
         //options.setNumThreads(5)
         //options.setUseNNAPI(true)
-
+        model = ConvertedModel.newInstance(applicationContext)
         labelList = loadLabelList(assets, labelPath)
+
     }
 
-
-    private fun loadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
-        val fileDescriptor = assetManager.openFd(modelPath)
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channel
-        val startOffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
-    }
-
+    @Suppress("SameParameterValue")
     private fun loadLabelList(assetManager: AssetManager, labelPath: String): List<String> {
         return assetManager.open(labelPath).bufferedReader().useLines { it.toList() }
     }
@@ -60,25 +45,15 @@ class Classifier(private val assets: AssetManager, private val applicationContex
     fun recognizeImage(bitmap: Bitmap): String {
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, inputSize, inputSize, false)
         val byteBuffer = convertBitmapToByteBuffer(scaledBitmap)
-        val outputMap = createHashMapOutput()
-        val bufferArray = Array(1){ byteBuffer}
 
-        // Creates inputs for reference.
         val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 299, 299, 3), DataType.FLOAT32)
         inputFeature0.loadBuffer(byteBuffer)
 
         val outputs = model.process(inputFeature0)
         val outputFeature0 = outputs.outputFeature0AsTensorBuffer
-        return getSortedResult(outputMap[0] as Array<FloatArray>, labelList)
+        val index = outputFeature0.floatArray.indexOfLast { it== outputFeature0.floatArray.maxOrNull() }
+        return labelList[index]
     }
-
-    private fun createHashMapOutput(): HashMap<Int,Any>{
-        val outputs:HashMap<Int, Any> = HashMap<Int,Any>()
-        val out = Array(1) { FloatArray(labelList.size)}
-        outputs.put(0,out)
-        return outputs
-    }
-
 
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
         val byteBuffer = ByteBuffer.allocateDirect(4 * inputSize * inputSize * imageChannels)
@@ -97,14 +72,5 @@ class Classifier(private val assets: AssetManager, private val applicationContex
             }
         }
         return byteBuffer
-    }
-
-    /**
-     * dfdadf
-     * dfdfd
-     */
-    private fun getSortedResult(labelProbArray: Array<FloatArray>, classList:List<String>): String {
-        val indexOfDog = labelProbArray[0].max()?.let { labelProbArray[0].indexOf(it) }
-        return classList[indexOfDog!!]
     }
 }

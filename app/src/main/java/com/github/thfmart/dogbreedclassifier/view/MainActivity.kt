@@ -1,12 +1,8 @@
 package com.github.thfmart.dogbreedclassifier.view
 
-import android.R.attr
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
@@ -44,12 +40,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun onClickCaptureCamera() {
         openCamera()
-        //dispatchTakePictureIntent()
     }
 
     private fun onClickCaptureFile() {
         getImageFromAlbum()
-        //pickImageFromGallery()
     }
 
     private fun getImageFromAlbum() {
@@ -70,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            binding.textView.text = getString(viewModel.calculatingMessage())
             val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, data?.data)
             bitmap?.let{
                 viewModel.predictBreed(bitmap)
@@ -80,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                         errorFileMessage.show() }
         }
         else if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_PICK_CODE){
+            binding.textView.text = getString(viewModel.calculatingMessage())
             val bitmap: Bitmap? = data!!.extras?.get("data") as Bitmap?
             bitmap?.let{
                 viewModel.predictBreed(bitmap)
@@ -96,8 +92,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateDogText(dogName: String){
-        val randomMessage = viewModel.getRandomMessage()
-        binding.textView.text = randomMessage.plus(dogName)
+        val randomMessage = getString(viewModel.getRandomMessage())
+        binding.textView.text = randomMessage.plus(" ").plus(dogName)
     }
 
     companion object {
