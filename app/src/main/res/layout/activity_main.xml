@@ -1,89 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:background="#50FFFFFF"
-    >
+    android:background="@color/light_white"
+    android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/text_view_first_message"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/attachFile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.246" />
+
+    <ImageButton
+        android:id="@+id/openCamera"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="8dp"
+        android:background="#00F4F2F2"
+        app:layout_constraintBottom_toBottomOf="@+id/attachFile"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toEndOf="@+id/attachFile"
+        app:layout_constraintTop_toTopOf="@+id/attachFile"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/camera_foreground"
+        android:contentDescription="@string/cameraDescription" />
+
+    <ImageButton
+        android:id="@+id/attachFile"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginBottom="560dp"
+        android:background="#00F4F2F2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/attach_foreground"
+        android:contentDescription="@string/attachDescription"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,4:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attachFile"
+        app:layout_constraintVertical_bias="0.176"
+        app:layout_constraintWidth_max="wrap"
+        app:srcCompat="@android:drawable/screen_background_light_transparent"
+        android:contentDescription="@string/imageDescription"/>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:text="@string/text_view_first_message"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#673AB7"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/img_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="2"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/img_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="2"
-            android:scaleType="centerCrop" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/dogIcon"
+        android:layout_width="150dp"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:forceDarkAllowed="false"
+        android:theme="@style/Theme.DogBreedClassifier"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.203"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.761"
+        app:srcCompat="@drawable/ic_dog"
+        android:contentDescription="@string/dogDescription"/>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_dog"
-            android:layout_weight="5" />
-
-        <Button
-            android:id="@+id/capture_file"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/attach_foreground"
-            android:backgroundTint="#FF673AB7"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/capture_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/camera_foreground"
-            android:backgroundTint="#FF673AB7"
-            android:ellipsize="start" />
+    <TextView
+        android:id="@+id/textAnswer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/speech_bubble"
+        android:contentDescription="@string/answerDescription"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="2dp"
+        android:textColor="@color/primary_text"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/dogIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dogIcon"
+        app:layout_constraintTop_toTopOf="@+id/dogIcon" />
 
 
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

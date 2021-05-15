@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,15 +28,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.captureFile.setOnClickListener {
+        binding.attachFile.setOnClickListener {
             onClickCaptureFile()
         }
-        binding.captureCamera.setOnClickListener{
+        binding.openCamera.setOnClickListener{
             onClickCaptureCamera()
         }
         viewModel.predictionResult.observe(this, Observer { breed ->
             updateDogText(breed)
         })
+        binding.instructions.text =  getString(viewModel.getInitialMessage())
     }
 
     private fun onClickCaptureCamera() {
@@ -64,10 +66,10 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            binding.textView.text = getString(viewModel.calculatingMessage())
             val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, data?.data)
             bitmap?.let{
                 viewModel.predictBreed(bitmap)
+                binding.imageView.visibility = View.VISIBLE
                 updateImage(bitmap)}
                     ?: run {
                         val errorFileMessage = Snackbar.make(binding.root, "Unable to read file format",
@@ -75,10 +77,10 @@ class MainActivity : AppCompatActivity() {
                         errorFileMessage.show() }
         }
         else if (resultCode == Activity.RESULT_OK && requestCode == CAMERA_PICK_CODE){
-            binding.textView.text = getString(viewModel.calculatingMessage())
             val bitmap: Bitmap? = data!!.extras?.get("data") as Bitmap?
             bitmap?.let{
                 viewModel.predictBreed(bitmap)
+                binding.imageView.visibility = View.VISIBLE   
                 updateImage(bitmap)}
                     ?: run {
                         val errorFileMessage = Snackbar.make(binding.root, "Unable to read file format",
@@ -88,12 +90,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateImage(bitmap: Bitmap){
-        binding.img1.setImageBitmap(bitmap)
+        binding.imageView.setImageBitmap(bitmap)
     }
 
     private fun updateDogText(dogName: String){
         val randomMessage = getString(viewModel.getRandomMessage())
-        binding.textView.text = randomMessage.plus(" ").plus(dogName)
+        binding.textAnswer.visibility = View.VISIBLE
+        binding.textAnswer.text = randomMessage.plus(" ").plus(dogName)
     }
 
     companion object {

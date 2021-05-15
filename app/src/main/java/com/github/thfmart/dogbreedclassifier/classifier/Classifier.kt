@@ -32,7 +32,7 @@ class Classifier(assets: AssetManager, applicationContext: Context) {
         }
         //options.setNumThreads(5)
         //options.setUseNNAPI(true)
-        model = ConvertedModel.newInstance(applicationContext)
+        model = ConvertedModel.newInstance(applicationContext,options)
         labelList = loadLabelList(assets, labelPath)
 
     }

@@ -35,8 +35,8 @@ class MainViewModel(private val assets: AssetManager, private val applicationCon
         return phrases[randomIndex]
     }
 
-    fun calculatingMessage(): Int {
-        return calculating
+    fun getInitialMessage(): Int {
+        return text_view_first_message
     }
 
     fun predictBreed(bitmap: Bitmap) {
