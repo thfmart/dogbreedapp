@@ -39,6 +39,10 @@ class MainViewModel(private val assets: AssetManager, private val applicationCon
         return text_view_first_message
     }
 
+    fun getWaitingMessage(): Int {
+        return loading_message
+    }
+
     fun predictBreed(bitmap: Bitmap) {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {

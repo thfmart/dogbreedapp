@@ -3,7 +3,7 @@ package com.github.thfmart.dogbreedclassifier.classifier
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
-import com.github.thfmart.dogbreedclassifier.ml.ConvertedModel
+import com.github.thfmart.dogbreedclassifier.ml.Effb1Quantized
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.model.Model
@@ -13,12 +13,12 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class Classifier(assets: AssetManager, applicationContext: Context) {
-    private val inputSize = 299
+    private val inputSize = 240
     private val labelPath = "labels.txt"
     private val imageMean = 0
     private val imageStd = 255.0f
     private val imageChannels = 3
-    private val model: ConvertedModel
+    private val model: Effb1Quantized
     private var labelList: List<String>
 
     init {
@@ -32,7 +32,7 @@ class Classifier(assets: AssetManager, applicationContext: Context) {
         }
         //options.setNumThreads(5)
         //options.setUseNNAPI(true)
-        model = ConvertedModel.newInstance(applicationContext,options)
+        model = Effb1Quantized.newInstance(applicationContext,options)
         labelList = loadLabelList(assets, labelPath)
 
     }
@@ -44,9 +44,9 @@ class Classifier(assets: AssetManager, applicationContext: Context) {
 
     fun recognizeImage(bitmap: Bitmap): String {
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, inputSize, inputSize, false)
-        val byteBuffer = convertBitmapToByteBuffer(scaledBitmap)
+        val byteBuffer = convertBitmapToByteBufferEfficientNet(scaledBitmap)
 
-        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 299, 299, 3), DataType.FLOAT32)
+        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, inputSize, inputSize, 3), DataType.FLOAT32)
         inputFeature0.loadBuffer(byteBuffer)
 
         val outputs = model.process(inputFeature0)
@@ -55,7 +55,7 @@ class Classifier(assets: AssetManager, applicationContext: Context) {
         return labelList[index]
     }
 
-    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
+    private fun convertBitmapToByteBufferEfficientNet(bitmap: Bitmap): ByteBuffer {
         val byteBuffer = ByteBuffer.allocateDirect(4 * inputSize * inputSize * imageChannels)
         byteBuffer.order(ByteOrder.nativeOrder())
         val intValues = IntArray(inputSize * inputSize)
@@ -66,9 +66,9 @@ class Classifier(assets: AssetManager, applicationContext: Context) {
             for (j in 0 until inputSize) {
                 val input = intValues[pixel++]
 
-                byteBuffer.putFloat((((input.shr(16)  and 0xFF) - imageMean) / imageStd))
-                byteBuffer.putFloat((((input.shr(8) and 0xFF) - imageMean) / imageStd))
-                byteBuffer.putFloat((((input and 0xFF) - imageMean) / imageStd))
+                byteBuffer.putFloat((input.shr(16) and 0xFF).toFloat())
+                byteBuffer.putFloat((input.shr(8) and 0xFF).toFloat())
+                byteBuffer.putFloat(((input and 0xFF).toFloat()))
             }
         }
         return byteBuffer

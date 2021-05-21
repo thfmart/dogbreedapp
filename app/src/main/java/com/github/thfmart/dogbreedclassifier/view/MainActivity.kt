@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.thfmart.dogbreedclassifier.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
+import com.github.thfmart.dogbreedclassifier.R.string.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -87,6 +88,10 @@ class MainActivity : AppCompatActivity() {
                                 Snackbar.LENGTH_LONG)
                         errorFileMessage.show() }
         }
+    }
+
+    private fun updateAnswerWaitMessage(){
+        binding.textAnswer.text = loading_message.toString()
     }
 
     private fun updateImage(bitmap: Bitmap){

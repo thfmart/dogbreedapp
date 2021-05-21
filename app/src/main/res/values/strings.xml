@@ -9,9 +9,10 @@
     <string name="phrase_seven">This dog is a </string>
     <string name="calculating">Calculating… </string>
     <string name="text_view_first_message">Insert an image so our app guesses which breed your dog belongs to</string>
-    <string name="attachDescription">Button to attach image</string>
-    <string name="cameraDescription">Button to open camera</string>
-    <string name="imageDescription">Dog image provided by the user</string>
-    <string name="dogDescription">Dog icon</string>
-    <string name="answerDescription">Breed caluclated by the App</string>
+    <string name="attach_description">Button to attach image</string>
+    <string name="camera_description">Button to open camera</string>
+    <string name="image_description">Dog image provided by the user</string>
+    <string name="dog_description">Dog icon</string>
+    <string name="answer_description">Breed predicted by the App</string>
+    <string name="loading_message">…</string>
 </resources>
