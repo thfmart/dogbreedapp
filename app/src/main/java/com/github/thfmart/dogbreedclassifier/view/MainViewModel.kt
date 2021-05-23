@@ -17,6 +17,7 @@ class MainViewModel(private val assets: AssetManager, private val applicationCon
 
     private lateinit var classifier: Classifier
     val predictionResult = MutableLiveData<String>()
+    val isPredicting = MutableLiveData<Boolean>()
 
     init {
         initClassifier()
@@ -39,16 +40,14 @@ class MainViewModel(private val assets: AssetManager, private val applicationCon
         return text_view_first_message
     }
 
-    fun getWaitingMessage(): Int {
-        return loading_message
-    }
-
     fun predictBreed(bitmap: Bitmap) {
+        isPredicting.value = true
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 val result = classifier.recognizeImage(bitmap)
                 withContext(Dispatchers.Main){
                     predictionResult.value = result
+                    isPredicting.value = false
                 }
             }
         }

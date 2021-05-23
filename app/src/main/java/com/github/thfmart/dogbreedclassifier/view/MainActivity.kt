@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         initViews()
+        initListeners()
     }
 
     private fun initViews() {
@@ -39,6 +40,14 @@ class MainActivity : AppCompatActivity() {
             updateDogText(breed)
         })
         binding.instructions.text =  getString(viewModel.getInitialMessage())
+    }
+
+    private fun initListeners() {
+        viewModel.isPredicting.observe(this, Observer{ isPredicting ->
+            if (isPredicting){
+                updateAnswerWaitMessage()
+            }
+        })
     }
 
     private fun onClickCaptureCamera() {
@@ -91,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAnswerWaitMessage(){
-        binding.textAnswer.text = loading_message.toString()
+        binding.textAnswer.text = getString(loading_message)
     }
 
     private fun updateImage(bitmap: Bitmap){
